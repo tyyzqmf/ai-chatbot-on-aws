@@ -15,8 +15,8 @@ import { IVpc } from 'aws-cdk-lib/aws-ec2';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as elasticache from 'aws-cdk-lib/aws-elasticache';
 import { Construct } from 'constructs';
-import { SystemConfig } from '../../configs/systemConfig';
 import { ASSETS_SHORT_NAME } from '../../configs/constants';
+import { SystemConfig } from '../../configs/systemConfig';
 
 export interface RedisProps {
   readonly vpc: IVpc;

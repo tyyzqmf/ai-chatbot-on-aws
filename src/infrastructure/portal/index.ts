@@ -1,16 +1,16 @@
 import path from 'path';
 import { Duration } from 'aws-cdk-lib';
+import { Distribution } from 'aws-cdk-lib/aws-cloudfront';
 import { IVpc, SecurityGroup, SubnetType } from 'aws-cdk-lib/aws-ec2';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { Role, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { DockerImageCode, DockerImageFunction, Function } from 'aws-cdk-lib/aws-lambda';
+import { IBucket } from 'aws-cdk-lib/aws-s3';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
-import { createLambdaRole } from '../common/lambda';
 import { AUTH_SECRET } from '../../configs/constants';
+import { createLambdaRole } from '../common/lambda';
 import { OIDCProps } from '../service/cognito';
-import { IBucket } from 'aws-cdk-lib/aws-s3';
-import { Distribution } from 'aws-cdk-lib/aws-cloudfront';
 
 export interface PortalProps {
   vpc: IVpc;
@@ -48,7 +48,7 @@ export class Portal extends Construct {
           's3:PutObject',
           's3:ListBucket',
         ],
-        resources: [`${bucket.bucketArn}/*`, bucket.bucketArn],  
+        resources: [`${bucket.bucketArn}/*`, bucket.bucketArn],
       }),
       new PolicyStatement({
         actions: [
@@ -74,10 +74,10 @@ export class Portal extends Construct {
     const portalFunctionRole = this.createFunctionRole(props.bucket);
 
     const sg = new SecurityGroup(this, 'SecurityGroup', {
-        vpc: props.vpc,
-        allowAllOutbound: true,
-      });
-    
+      vpc: props.vpc,
+      allowAllOutbound: true,
+    });
+
     const fn = new DockerImageFunction(this, 'ServerFunction', {
       code: DockerImageCode.fromImageAsset(path.join(__dirname, '../../portal/'), {
         file: './Dockerfile',

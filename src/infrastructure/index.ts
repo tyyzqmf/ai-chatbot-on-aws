@@ -13,15 +13,15 @@
 
 import { CloudFrontToS3 } from '@aws-solutions-constructs/aws-cloudfront-s3';
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
+import { Distribution } from 'aws-cdk-lib/aws-cloudfront';
 import { Vpc, FlowLog, FlowLogDestination, FlowLogResourceType, FlowLogTrafficType } from 'aws-cdk-lib/aws-ec2';
 import { IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { WellArchCognito } from './service/cognito';
 import { SystemConfig } from '../configs/systemConfig';
-import { Postgres } from './service/postgres';
 import { ALBFargate } from './service/alb-fargate';
-import { Distribution } from 'aws-cdk-lib/aws-cloudfront';
 import { Redis } from './service/elasticache';
+import { Postgres } from './service/postgres';
 
 interface AIChatbotProps extends StackProps {
   config: SystemConfig;
@@ -112,7 +112,7 @@ export class AIChatbot extends Stack {
       description: 'Redis URL',
       value: redisURL,
     }).overrideLogicalId('RedisURL');
-    
+
     new CfnOutput(this, 'ALBEndpoint', {
       description: 'Application Load Balancer Endpoint',
       value: albFargate.albUrl,

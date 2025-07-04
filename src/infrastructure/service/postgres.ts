@@ -15,11 +15,11 @@ import * as cdk from 'aws-cdk-lib';
 import { IVpc } from 'aws-cdk-lib/aws-ec2';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as rds from 'aws-cdk-lib/aws-rds';
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { PostgresEngineVersion } from 'aws-cdk-lib/aws-rds';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { Construct } from 'constructs';
-import { SystemConfig } from '../../configs/systemConfig';
 import { ASSETS_SHORT_NAME } from '../../configs/constants';
+import { SystemConfig } from '../../configs/systemConfig';
 
 export interface PostgresProps {
   readonly vpc: IVpc;
@@ -50,7 +50,7 @@ export class Postgres extends Construct {
       ec2.Port.tcp(5432),
       'Allow access to the DB from the VPC',
     );
-    
+
     // Generate a secret with username and password for the database
     const databaseCredentials = new secretsmanager.Secret(this, 'DBCredentialsSecret', {
       description: 'RDS PostgreSQL database credentials',
@@ -63,7 +63,7 @@ export class Postgres extends Construct {
         generateStringKey: 'password',
       },
     });
-    
+
     // Create the RDS instance with the credentials from Secrets Manager
     this.postgresInstance = new rds.DatabaseInstance(this, 'DBInstance', {
       engine: rds.DatabaseInstanceEngine.postgres({
@@ -79,7 +79,7 @@ export class Postgres extends Construct {
 
     // Store the secret name for reference
     this.postgresSecretName = databaseCredentials.secretName;
-    
+
     // Construct the database URL for use in applications
     // This will be resolved at deployment time
     this.postgresURL = `postgres://${databaseCredentials.secretValueFromJson('username').unsafeUnwrap()}:${databaseCredentials.secretValueFromJson('password').unsafeUnwrap()}@${this.postgresInstance.dbInstanceEndpointAddress}:${this.postgresInstance.dbInstanceEndpointPort}/${ASSETS_SHORT_NAME}`;

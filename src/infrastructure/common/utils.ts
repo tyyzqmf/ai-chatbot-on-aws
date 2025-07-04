@@ -12,28 +12,27 @@
  */
 
 export function generateRandomPassword(length: number): string {
-    const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
-    const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const numbers = '0123456789';
-    const specialChars = '!#^()-_=+[]:.';
-  
-    // Ensure at least one character from each category
-    const passwordArray: string[] = [];
-    passwordArray.push(lowerCase[Math.floor(Math.random() * lowerCase.length)]);
-    passwordArray.push(upperCase[Math.floor(Math.random() * upperCase.length)]);
-    passwordArray.push(numbers[Math.floor(Math.random() * numbers.length)]);
-    passwordArray.push(specialChars[Math.floor(Math.random() * specialChars.length)]);
-  
-    // Fill the rest of the password length with random characters from all categories
-    const allChars = lowerCase + upperCase + numbers + specialChars;
-    for (let i = 4; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * allChars.length);
-      passwordArray.push(allChars[randomIndex]);
-    }
-  
-    // Shuffle the password array to ensure randomness
-    const shuffledPassword = passwordArray.sort(() => 0.5 - Math.random()).join('');
-  
-    return shuffledPassword;
+  const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
+  const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const numbers = '0123456789';
+  const specialChars = '!#^()-_=+[]:.';
+
+  // Ensure at least one character from each category
+  const passwordArray: string[] = [];
+  passwordArray.push(lowerCase[Math.floor(Math.random() * lowerCase.length)]);
+  passwordArray.push(upperCase[Math.floor(Math.random() * upperCase.length)]);
+  passwordArray.push(numbers[Math.floor(Math.random() * numbers.length)]);
+  passwordArray.push(specialChars[Math.floor(Math.random() * specialChars.length)]);
+
+  // Fill the rest of the password length with random characters from all categories
+  const allChars = lowerCase + upperCase + numbers + specialChars;
+  for (let i = 4; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * allChars.length);
+    passwordArray.push(allChars[randomIndex]);
   }
-  
+
+  // Shuffle the password array to ensure randomness
+  const shuffledPassword = passwordArray.sort(() => 0.5 - Math.random()).join('');
+
+  return shuffledPassword;
+}

@@ -31,6 +31,11 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'cdk.context.json',
     '.DS_Store',
   ],
+  jestOptions: {
+    jestConfig: {
+      testPathIgnorePatterns: ['/node_modules/', '/src/portal/*'],
+    },
+  },
 });
 project.eslint?.addIgnorePattern('src/portal/');
 
