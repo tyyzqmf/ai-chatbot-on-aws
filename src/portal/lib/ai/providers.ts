@@ -14,7 +14,8 @@ import {
 import { createAmazonBedrock } from '@ai-sdk/amazon-bedrock';
 import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
 
-const region = process.env.BEDROCK_REGION || process.env.AWS_REGION || 'us-west-2';
+const region =
+  process.env.BEDROCK_REGION || process.env.AWS_REGION || 'us-west-2';
 const bedrock = createAmazonBedrock({
   region: region,
   credentialProvider: fromNodeProviderChain(),
@@ -40,6 +41,8 @@ export const myProvider = isTestEnvironment
         'artifact-model': bedrock('us.amazon.nova-pro-v1:0'),
       },
       imageModels: {
-        'small-model': bedrock.image('us.anthropic.claude-3-5-sonnet-20241022-v2:0'),
+        'small-model': bedrock.image(
+          'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
+        ),
       },
     });

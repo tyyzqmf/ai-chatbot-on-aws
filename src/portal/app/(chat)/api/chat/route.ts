@@ -229,7 +229,7 @@ export async function POST(request: Request) {
     console.error('Unexpected error in chat API:', error);
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }

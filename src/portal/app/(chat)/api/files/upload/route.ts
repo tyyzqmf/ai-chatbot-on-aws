@@ -1,11 +1,11 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { auth } from '@/app/(auth)/auth';
 
-const region = process.env.AWS_REGION ?? 'us-east-1'
+const region = process.env.AWS_REGION ?? 'us-east-1';
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     const filename = (formData.get('file') as File).name;
 
     if (!session.user?.id) {
-      return NextResponse.json({ error: "User not found" }, { status: 401 });
+      return NextResponse.json({ error: 'User not found' }, { status: 401 });
     }
 
     const key = `${crypto.randomUUID()}-${filename}`;
@@ -63,20 +63,23 @@ export async function POST(request: Request) {
     });
 
     try {
-      const signedUrl = await getSignedUrl(new S3Client({
-        region: region,
-      }), command);
+      const signedUrl = await getSignedUrl(
+        new S3Client({
+          region: region,
+        }),
+        command,
+      );
 
       const response = await fetch(signedUrl, {
-        method: "PUT",
+        method: 'PUT',
         body: file,
         headers: {
-          "Content-Type": file.type,
+          'Content-Type': file.type,
         },
       });
 
       if (!response.ok) {
-        return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+        return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
       }
 
       // Get the public URL for the uploaded file
@@ -88,8 +91,8 @@ export async function POST(request: Request) {
         contentType: file.type,
       });
     } catch (error) {
-      console.error("Error uploading file:", error);
-      return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+      console.error('Error uploading file:', error);
+      return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
     }
   } catch (error) {
     return NextResponse.json(

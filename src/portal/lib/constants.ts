@@ -7,4 +7,3 @@ export const isTestEnvironment = Boolean(
 );
 
 export const guestRegex = /^guest-\d+$/;
-

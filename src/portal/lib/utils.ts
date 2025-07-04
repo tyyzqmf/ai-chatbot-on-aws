@@ -14,19 +14,19 @@ import { getSession } from 'next-auth/react';
 export const fetcher = async (url: string) => {
   // For API requests, get the session and use accessToken
   const headers: Record<string, string> = {};
-  
+
   if (url.startsWith('/api/')) {
     // Get the session using next-auth
     const session = await getSession();
-    
+
     if (session?.accessToken) {
-      headers['Authorization'] = `Bearer ${session.accessToken}`;
+      headers.Authorization = `Bearer ${session.accessToken}`;
     }
   }
 
   const response = await fetch(url, {
-    credentials: 'include',  // Ensure cookies are included for authentication
-    headers
+    credentials: 'include', // Ensure cookies are included for authentication
+    headers,
   });
 
   if (!response.ok) {
@@ -43,29 +43,29 @@ export async function fetchWithErrorHandlers(
 ) {
   try {
     const headers: Record<string, string> = {};
-    
+
     // Copy existing headers if any
     if (init?.headers) {
       const existingHeaders = init.headers as Record<string, string>;
-      Object.keys(existingHeaders).forEach(key => {
+      Object.keys(existingHeaders).forEach((key) => {
         headers[key] = existingHeaders[key];
       });
     }
-    
+
     // For API requests, get the session and use accessToken
     if (typeof input === 'string' && input.startsWith('/api/')) {
       // Get the session using next-auth
       const session = await getSession();
-      
+
       if (session?.accessToken) {
-        headers['Authorization'] = `Bearer ${session.accessToken}`;
+        headers.Authorization = `Bearer ${session.accessToken}`;
       }
     }
 
     const response = await fetch(input, {
       ...init,
       headers,
-      credentials: 'include'  // Ensure cookies are included for authentication
+      credentials: 'include', // Ensure cookies are included for authentication
     });
 
     if (!response.ok) {
