@@ -1,0 +1,6 @@
+{
+  "version": "1.0",
+  "protocol_version": "1.3",
+  "description": "Chrome DevTools Configuration",
+  "frontend_url": "https://chrome-devtools-frontend.appspot.com/serve_rev/@{version}/{path}"
+}
