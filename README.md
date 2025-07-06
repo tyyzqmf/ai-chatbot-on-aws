@@ -1,4 +1,4 @@
-# AI Chatbot on AWS
+<h1 align="center">AI Chatbot on AWS</h1>
 
 <p align="center">
   An Open-Source AI Chatbot Template Built With Next.js and the AI SDK by Vercel. Deployed on AWS using CDK. LLM provider: AWS Bedrock.
