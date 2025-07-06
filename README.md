@@ -1,6 +1,18 @@
-# AI Chatbot on AWS
+<p align="center">
+  An Open-Source AI Chatbot Template Built With Next.js and the AI SDK by Vercel. Deployed on AWS using CDK. LLM provider: AWS Bedrock.
+</p>
 
-## Features
+<p align="center">
+  <a href="#architecture"><strong>Architecture</strong></a> ·
+  <a href="#model-providers"><strong>Model Providers</strong></a> ·
+  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
+  <a href="#running-locally"><strong>Running locally</strong></a>
+</p>
+<br/>
+
+## Architecture
+
+![architecture](images/architecture.png)
 
 - [Next.js](https://nextjs.org) App Router
   - Advanced routing for seamless navigation and performance
@@ -9,6 +21,9 @@
   - Unified API for generating text, structured objects, and tool calls with LLMs
   - Hooks for building dynamic chat and generative user interfaces
   - Supports xAI (default), Amazon Bedrock, OpenAI, Fireworks, and other model providers
+- [Fargate](https://aws.amazon.com/fargate)
+  - Container orchestration service, running API services and core business logic
+  - Works with [Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html) to ensure stable streaming requests
 - [shadcn/ui](https://ui.shadcn.com)
   - Styling with [Tailwind CSS](https://tailwindcss.com)
   - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
@@ -22,9 +37,9 @@
 
 ## Model Providers
 
-This template ships with [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/) `amazon.nova-pro-v1` as the default chat model. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+This template ships with [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/) `Claude 3.5 Haiku, Anthropic` as the default chat model. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
 
-## Getting Started
+## Deploy Your Own
 
 **Step 1.** Install the project dependencies and build the project.
 
@@ -53,11 +68,7 @@ You can now deploy by running:
 pnpm run deploy
 ```
 
-**Step 4.** Access the application
-
-Once the deployment is complete, you will see the output(`ApiGatewayEndpoint`) of the stack in the terminal. 
-
-## Local development
+## Running locally
 
 Goto the folder: `src/portal`, run script:
 
