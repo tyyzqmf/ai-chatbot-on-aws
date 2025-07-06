@@ -56,7 +56,12 @@ NextAuthUrl=http://$DomainName/api/auth
 echo "NextAuth URL: $NextAuthUrl"
 CloudFrontDomainName=$(get_stack_output $stackName "CloudFrontDomainName" $PROFILE $REGION)
 echo "CloudFront Domain Name: $CloudFrontDomainName"
-PostgresURL=$(get_stack_output $stackName "PostgresURL" $PROFILE $REGION)
+# Get PostgresSecretName from stack outputs
+PostgresSecretName=$(get_stack_output $stackName "PostgresSecretName" $PROFILE $REGION)
+echo "Postgres Secret Name: $PostgresSecretName"
+
+# Build PostgresURL from the secret
+PostgresURL=$(build_postgres_url_from_secret "$PostgresSecretName" "$PROFILE" "$REGION")
 echo "Postgres URL: $PostgresURL"
 CognitoIssuer=$(get_stack_output $stackName "CognitoIssuer" $PROFILE $REGION)
 echo "Cognito Issuer: $CognitoIssuer"

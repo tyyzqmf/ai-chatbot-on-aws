@@ -4,6 +4,7 @@ set -e
 # This script implements file-based caching for CloudFormation stack outputs
 # Cache files are stored in .cache directory with a 1-minute expiration
 # Format: .cache/cfn-<stackName>[-profile][-region].json
+# It also provides utilities for accessing AWS Secrets Manager secrets
 
 # Function to ensure cache directory exists
 ensure_cache_dir() {
@@ -112,4 +113,80 @@ get_stack_output() {
     fi
 
     echo "$stack_output"
+}
+
+# Function to get a secret value from AWS Secrets Manager
+get_secret_value() {
+    local secretName=$1
+    local profile=$2
+    local region=$3
+
+    if [ -z "$secretName" ]; then
+        echo "Usage: get_secret_value <secretName> [profile] [region]" >&2
+        return 1
+    fi
+
+    # Enable debug logging if DEBUG environment variable is set
+    if [ "${DEBUG:-}" = "true" ]; then
+        echo "Debug: Retrieving secret $secretName" >&2
+    fi
+
+    # Get the secret value from AWS Secrets Manager
+    local secret_value
+    if ! secret_value=$(aws secretsmanager get-secret-value $profile $region \
+        --secret-id "$secretName" \
+        --query "SecretString" \
+        --output text 2>&1); then
+        echo "Error fetching secret value from AWS Secrets Manager: $secret_value" >&2
+        return 1
+    fi
+
+    # Check if the secret value is valid JSON
+    if ! echo "$secret_value" | jq empty >/dev/null 2>&1; then
+        # If not JSON, return as is
+        echo "$secret_value"
+    else
+        # If JSON, return as is (caller will need to parse it)
+        echo "$secret_value"
+    fi
+}
+
+# Function to build a Postgres URL from a secret
+build_postgres_url_from_secret() {
+    local secretName=$1
+    local profile=$2
+    local region=$3
+
+    if [ -z "$secretName" ]; then
+        echo "Usage: build_postgres_url_from_secret <secretName> [profile] [region]" >&2
+        return 1
+    fi
+
+    # Get the secret JSON from AWS Secrets Manager
+    local secret_json
+    if ! secret_json=$(get_secret_value "$secretName" "$profile" "$region"); then
+        return 1
+    fi
+
+    # Extract components from the JSON
+    local username
+    local password
+    local host
+    local port
+    local dbname
+    
+    username=$(echo "$secret_json" | jq -r '.username // .Username // ""')
+    password=$(echo "$secret_json" | jq -r '.password // .Password // ""')
+    host=$(echo "$secret_json" | jq -r '.host // .Host // .endpoint // .Endpoint // ""')
+    port=$(echo "$secret_json" | jq -r '.port // .Port // "5432"')
+    dbname=$(echo "$secret_json" | jq -r '.dbname // .dbName // .DBName // "postgres"')
+    
+    # Validate required fields
+    if [ -z "$username" ] || [ -z "$password" ] || [ -z "$host" ]; then
+        echo "Error: Missing required fields in secret (username, password, or host)" >&2
+        return 1
+    fi
+    
+    # Build and return the PostgreSQL URL
+    echo "postgres://${username}:${password}@${host}:${port}/${dbname}?ssl=require"
 }

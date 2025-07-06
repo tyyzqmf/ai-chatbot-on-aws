@@ -32,13 +32,13 @@ export const myProvider = isTestEnvironment
     })
   : customProvider({
       languageModels: {
-        'chat-model': bedrock('us.amazon.nova-pro-v1:0'),
+        'chat-model': bedrock('us.anthropic.claude-3-5-haiku-20241022-v1:0'),
         'chat-model-reasoning': wrapLanguageModel({
-          model: bedrock('us.anthropic.claude-3-7-sonnet-20250219-v1:0'),
+          model: bedrock('us.anthropic.claude-3-5-sonnet-20241022-v2:0'),
           middleware: extractReasoningMiddleware({ tagName: 'think' }),
         }),
-        'title-model': bedrock('us.amazon.nova-pro-v1:0'),
-        'artifact-model': bedrock('us.amazon.nova-pro-v1:0'),
+        'title-model': bedrock('us.anthropic.claude-3-5-haiku-20241022-v1:0'),
+        'artifact-model': bedrock('us.anthropic.claude-3-5-haiku-20241022-v1:0'),
       },
       imageModels: {
         'small-model': bedrock.image(
