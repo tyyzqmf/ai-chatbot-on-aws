@@ -14,7 +14,14 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/lib/db/migrations ./lib/db/migrations
+COPY --from=builder /app/lib/db/migrate.ts ./lib/db/migrate.ts
 COPY --from=builder /app/run.sh ./run.sh
+
+# Install required packages for migrations
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml* ./
+RUN npm install -g tsx pnpm@10.2.1
+RUN pnpm install dotenv drizzle-orm postgres
 
 RUN mkdir -p .next/cache
 
@@ -27,4 +34,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
 USER appuser
 EXPOSE 8080
 
-CMD ["node", "server.js"]
+CMD ["bash", "run.sh"]
