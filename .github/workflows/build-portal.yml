@@ -27,12 +27,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.12.0
-      - name: Portal
-        run: cd src/portal
       - name: Install dependencies
         run: pnpm i --no-frozen-lockfile
+        working-directory: ./src/portal
       - name: build
         run: pnpm build
+        working-directory: ./src/portal
       - name: Find mutations
         id: self_mutation
         run: |-
