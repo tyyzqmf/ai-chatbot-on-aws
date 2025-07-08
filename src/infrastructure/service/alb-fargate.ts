@@ -129,6 +129,8 @@ export class ALBFargate extends Construct {
       fargateServiceProps: {
         desiredCount: 2,
         healthCheckGracePeriod: Duration.seconds(60),
+        maxHealthyPercent: 200,
+        minHealthyPercent: 100,
       },
       publicApi: true,
       existingVpc: props.vpc,
